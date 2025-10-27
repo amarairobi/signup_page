@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Fun Signup App',
-      theme: ThemeData(primarySwatch: Colors.purple),
+      theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Helvetica',),
       home: const SignupPage(),
     );
   }
@@ -29,12 +29,15 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // NEW: Confirm Password Controller
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Join Us Today for the Cash Money!'),
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.blue.shade400,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,7 +48,7 @@ class _SignupPageState extends State<SignupPage> {
               // Welcome Message
               const Text(
                 'Create Your Account',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
 
@@ -105,31 +108,77 @@ class _SignupPageState extends State<SignupPage> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16),
+
+              //confirm pass
+              TextFormField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Confirm Password',
+                  prefixIcon: Icon(Icons.lock_outline),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please confirm your password.';
+                  }
+                  if (value != _passwordController.text) {
+                    return 'Sorry! Passwords do not match. Try again.';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 24),
 
               // Sign Up Button
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Welcome! Account created successfully.'),
-                        backgroundColor: Colors.green,
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WelcomePage(
+                          name: _nameController.text,
+                        ),
                       ),
                     );
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
+                  backgroundColor: Colors.blue.shade400,
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                 ),
                 child: const Text(
-                  'Sign Up',
-                  style: TextStyle(fontSize: 18),
+                  'Sign Up!',
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class WelcomePage extends StatelessWidget {
+  final String name;
+  const WelcomePage({super.key, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.blue.shade100,
+      appBar: AppBar(
+        title: const Text('Welcome'),
+        backgroundColor: Colors.blue.shade500,
+      ),
+      body: Center(
+        child: Text(
+          'Welcome, $name!',
+          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
       ),
     );
