@@ -29,7 +29,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // NEW: Confirm Password Controller
+
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
